@@ -17,7 +17,7 @@ def test():
     print('hoi')
 
 
-with DAG("forex_data_pipeline", start_date=datetime(2021, 1 ,1), 
+with DAG("hoi", start_date=datetime(2021, 1 ,1), 
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:
 
 

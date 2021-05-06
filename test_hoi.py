@@ -23,7 +23,7 @@ with DAG("forex_data_pipeline", start_date=datetime(2021, 1 ,1),
 
     log = PythonOperator(
         task_id="log",
-        python_callable=download_rates
+        python_callable=test
     )
 
     send_email_notification = EmailOperator(

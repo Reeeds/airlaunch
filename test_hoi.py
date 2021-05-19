@@ -68,7 +68,6 @@ with DAG("hoi", start_date=datetime(2021, 1 ,1),
         to="reto.schuermann@gmail.com",
         subject="Hoi",
         html_content= "<h3>hoi</h3><br> {{ ti.xcom_pull(task_ids='getDataFromYahoo') }} ",
-        provide_context=True
 #        files=['stocks.csv']
     )
 

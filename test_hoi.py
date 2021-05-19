@@ -46,10 +46,13 @@ def test():
         else:
             print('Date aelter als drei Tage!!!')
         result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
-    print(result)
-    result.to_csv('stocks.csv', index=False)
-#   htmltable = result.to_html()
-#   return htmltable
+#    print(result)
+#    result.to_csv('stocks.csv', index=False)
+    result.to_html('table.html')
+
+def getStockTable():
+    f = open("table.html", "r")
+    return f.read()
 
 with DAG("hoi", start_date=datetime(2021, 1 ,1), 
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:
@@ -64,8 +67,8 @@ with DAG("hoi", start_date=datetime(2021, 1 ,1),
         task_id="send_email_notification",
         to="reto.schuermann@gmail.com",
         subject="Hoi",
-        html_content="<h3>Hoi test</h3>",
-        files=['stocks.csv']
+        html_content=getStockTable(),
+#        files=['stocks.csv']
     )
 
     log >> send_email_notification

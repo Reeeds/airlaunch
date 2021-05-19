@@ -64,7 +64,8 @@ with DAG("hoi", start_date=datetime(2021, 1 ,1),
         task_id="send_email_notification",
         to="reto.schuermann@gmail.com",
         subject="Hoi",
-        html_content="<h3>Hoi test</h3>"
+        html_content="<h3>Hoi test</h3>",
+        files=['stocks.csv']
     )
 
     log >> send_email_notification

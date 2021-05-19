@@ -30,7 +30,7 @@ with DAG("hoi", start_date=datetime(2021, 1 ,1),
         task_id="send_email_notification",
         to="reto.schuermann@gmail.com.com",
         subject="Hoi",
-        html_content="<h3>Hoi</h3>"
+        html_content="<h3>Hoi test</h3>"
     )
 
     log >> send_email_notification

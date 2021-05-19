@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.email import EmailOperator
+from airflow.models import Variable
 from datetime import datetime, timedelta
 import pandas as pd
 import pandas_datareader.data as web
@@ -14,7 +15,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5)
 }
 
-def test():
+def prepareData():
     print('hoi')
     stock_list = ['AAPL','GOOGL','AMZN','TSLA','FB','ROG.SW','NOVN.SW','IDIA.SW','CSGN.SW','UBSG.SW','RLF.SW','SEDG','MDB','ALGN','ALXN','SIVB','MBTN.SW','PGHN.SW','NESN.SW','ABBV','AYX','ADS']
     result = pd.DataFrame(columns=('Date', 'Stock', 'Action'))
@@ -48,7 +49,7 @@ def test():
         result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
 #    print(result)
 #    result.to_csv('stocks.csv', index=False)
-    result.to_html('table.html')
+    return result.to_html
 
 def getStockTable():
     f = open("table.html", "r")
@@ -58,17 +59,19 @@ with DAG("hoi", start_date=datetime(2021, 1 ,1),
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:
 
 
-    log = PythonOperator(
-        task_id="log",
-        python_callable=test
+    getDataFromYahoo = PythonOperator(
+        task_id="getDataFromYahoo",
+        python_callable=prepareData,
+        xcom_push=True
     )
 
     send_email_notification = EmailOperator(
         task_id="send_email_notification",
         to="reto.schuermann@gmail.com",
         subject="Hoi",
-        html_content=getStockTable(),
+        html_content= "<h3>hoi</h3><br> {{ task_instance.xcom_pull(task_ids='getDataFromYahoo') }} ",
+        provide_context=True
 #        files=['stocks.csv']
     )
 
-    log >> send_email_notification
+    getDataFromYahoo >> send_email_notification

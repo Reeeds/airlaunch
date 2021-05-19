@@ -20,8 +20,36 @@ def test():
     result = pd.DataFrame(columns=('Date', 'Stock', 'Action'))
     end = datetime.now()
     start = datetime(end.year - 1,end.month,end.day)#
-    test = web.DataReader('AAPL','yahoo',start,end)
-    print(test)
+    for stock in stock_list:   
+        globals()[stock] = web.DataReader(stock,'yahoo',start,end)
+    for stock in stock_list:
+        df = globals()[stock]
+        df['Close: 30 Day Mean'] = df['Close'].rolling(window=20).mean()
+        df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
+        df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
+        fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
+        fig.savefig(stock + '.png')
+        dfTail = df.tail(1)
+        date = pd.to_datetime(dfTail.iloc[0].name)
+        close = dfTail.iloc[0]['Close']
+        upper = dfTail.iloc[0]['Upper']
+        lower = dfTail.iloc[0]['Lower']
+        diffrence = end - date
+        action = 'hold'
+        if diffrence.days < 3:
+            if close < lower:
+                action='buy'
+            elif close > upper:
+                action='sell'
+            else:
+                pass
+        else:
+            print('Date aelter als drei Tage!!!')
+        result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
+    print(result)
+    result.to_csv('stocks.csv', index=False)
+#   htmltable = result.to_html()
+#   return htmltable
 
 with DAG("hoi", start_date=datetime(2021, 1 ,1), 
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:

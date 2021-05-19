@@ -51,10 +51,6 @@ def prepareData():
 #    result.to_csv('stocks.csv', index=False)
     return result.to_html
 
-def getStockTable():
-    f = open("table.html", "r")
-    return f.read()
-
 with DAG("hoi", start_date=datetime(2021, 1 ,1), 
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:
 

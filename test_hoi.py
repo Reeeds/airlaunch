@@ -49,7 +49,7 @@ def prepareData():
         result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
 #    print(result)
 #    result.to_csv('stocks.csv', index=False)
-    return str(result.to_html)
+    return str(result)
 
 def get_pushed_xcom_with_return(**context):
     print(context['ti'].xcom_pull(task_ids='getDataFromYahoo')) 

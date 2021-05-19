@@ -2,7 +2,8 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.email import EmailOperator
 from datetime import datetime, timedelta
-
+import pandas as pd
+import pandas_datareader.data as web
 
 default_args = {
     "owner": "airflow",
@@ -15,7 +16,12 @@ default_args = {
 
 def test():
     print('hoi')
-
+    stock_list = ['AAPL','GOOGL','AMZN','TSLA','FB','ROG.SW','NOVN.SW','IDIA.SW','CSGN.SW','UBSG.SW','RLF.SW','SEDG','MDB','ALGN','ALXN','SIVB','MBTN.SW','PGHN.SW','NESN.SW','ABBV','AYX','ADS']
+    result = pd.DataFrame(columns=('Date', 'Stock', 'Action'))
+    end = datetime.now()
+    start = datetime(end.year - 1,end.month,end.day)#
+    test = web.DataReader('AAPL','yahoo',start,end)
+    print(test)
 
 with DAG("hoi", start_date=datetime(2021, 1 ,1), 
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:

@@ -51,6 +51,9 @@ def prepareData():
 #    result.to_csv('stocks.csv', index=False)
     return result.to_html
 
+def get_pushed_xcom_with_return(**context):
+    print(context['ti'].xcom_pull(task_ids='getDataFromYahoo')) 
+
 with DAG("hoi", start_date=datetime(2021, 1 ,1), 
     schedule_interval="@daily", default_args=default_args, catchup=False) as dag:
 
@@ -58,14 +61,13 @@ with DAG("hoi", start_date=datetime(2021, 1 ,1),
     getDataFromYahoo = PythonOperator(
         task_id="getDataFromYahoo",
         python_callable=prepareData,
-        xcom_push=True
     )
 
     send_email_notification = EmailOperator(
         task_id="send_email_notification",
         to="reto.schuermann@gmail.com",
         subject="Hoi",
-        html_content= "<h3>hoi</h3><br> {{ task_instance.xcom_pull(task_ids='getDataFromYahoo') }} ",
+        html_content= "<h3>hoi</h3><br> {{ ti.xcom_pull(task_ids='getDataFromYahoo') }} ",
         provide_context=True
 #        files=['stocks.csv']
     )

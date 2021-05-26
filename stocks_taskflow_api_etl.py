@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import pandas_datareader.data as web
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
+from airflow.operators.email import EmailOperator
 
 default_args = {
     'owner': 'airflow',
@@ -46,7 +47,7 @@ def stocks_taskflow_api_etl():
             else:
                 print('Date aelter als drei Tage!!!')
             result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
-            print(result)
+        print(result)
         return pd.DataFrame(result)
 
     @task(multiple_outputs=True)
@@ -58,7 +59,16 @@ def stocks_taskflow_api_etl():
     def load(total_order_value: float):
             print("Total order value is: %.2f" % total_order_value)
 
+    send_email_notification = EmailOperator(
+        task_id="send_email_notification",
+        to="reto.schuermann@gmail.com",
+        subject="Hoi",
+        html_content= "<h3>hoi</h3><br>",
+#        files=['stocks.csv']
+    )
+
     order_data = extract()
+    send_email_notification
    # order_summary = transform(order_data)
    # load(order_summary["total_order_value"])
 

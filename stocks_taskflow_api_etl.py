@@ -80,9 +80,9 @@ def stocks_taskflow_api_etl():
 #        files=['stocks.csv']
 #    )
 
-    order_data = extract()
-    order_summary = transform(order_data) 
-    email_callback()
+    dataTest = extract()
+    dataTest2 = transform(dataTest) 
+    email_callback(dataTest2)
    # load(order_summary["total_order_value"])
 
 stocks_etl_dag = stocks_taskflow_api_etl()

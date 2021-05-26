@@ -4,7 +4,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import pandas_datareader.data as web
 import io
-import os
+import os 
+import glob
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.utils.email import send_email
@@ -31,7 +32,7 @@ def stocks_taskflow_api_etl():
             df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
             df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
             fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
-            fig.savefig(stock + '.png')
+            fig.savefig('figures/' + stock + '.png')
             dfTail = df.tail(1)
             date = pd.to_datetime(dfTail.iloc[0].name)
             close = dfTail.iloc[0]['Close']
@@ -66,13 +67,15 @@ def stocks_taskflow_api_etl():
     def email_callback(df):
         df = pd.read_csv(io.StringIO(df))  
         files = [f for f in os.listdir('.') if os.path.isfile(f)]
-        content = df.to_html() + str(files)
-    
+        files2 = glob.glob("/figures/*.png")
+        
+        content = df.to_html() + str(files) + '<br><br>' + str(files2)
+   
         send_email(
-        to=["reto.schuermann@gmail.com"],
-        subject='Report',
-        html_content=content,
-      #  files=['AAPL.png']
+            to=["reto.schuermann@gmail.com"],
+            subject='Report',
+            html_content=content,
+            files=['airflow.cfg']
         )
     dataTest = extract()
     dataTest2 = transform(dataTest) 

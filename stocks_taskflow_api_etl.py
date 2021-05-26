@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import pandas_datareader.data as web
 import io
+import os
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.utils.email import send_email
@@ -64,23 +65,15 @@ def stocks_taskflow_api_etl():
     @task()
     def email_callback(df):
         df = pd.read_csv(io.StringIO(df))  
-        content = df.to_html()
+        files = [f for f in os.listdir('.') if os.path.isfile(f)]
+        content = df.to_html() + str(files)
     
         send_email(
         to=["reto.schuermann@gmail.com"],
-        subject='subject',
+        subject='Report',
         html_content=content,
-        files=['AAPL.png']
+      #  files=['AAPL.png']
         )
-
-#    send_email_notification = EmailOperator(
-#        task_id="send_email_notification",
-#        to="reto.schuermann@gmail.com",
-#        subject="Hoi",
-#        html_content= "<h3>hoi</h3><br>",
-#        files=['stocks.csv']
-#    )
-
     dataTest = extract()
     dataTest2 = transform(dataTest) 
     email_callback(dataTest2)

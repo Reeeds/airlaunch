@@ -51,7 +51,7 @@ def stocks_taskflow_api_etl():
         print(result)
         return result.to_csv()
 
-    @task(multiple_outputs=True)
+    @task()
     def transform(df):
         df = pd.read_csv(io.StringIO(df))     
         print(df)

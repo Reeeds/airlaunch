@@ -28,6 +28,11 @@ def stocks_taskflow_api_etl():
             globals()[stock] = web.DataReader(stock,'yahoo',start,end)
         for stock in stock_list:
             df = globals()[stock]
+            dfClose = df['Close']
+            today = dfClose.index[-1]
+            yest= dfClose.index[-2]
+            close = dfClose[today]
+            daily =  (close - dfClose[yest]) / dfClose[yest] * 100
             df['Close: 30 Day Mean'] = df['Close'].rolling(window=20).mean()
             df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
             df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
@@ -51,7 +56,7 @@ def stocks_taskflow_api_etl():
                     pass
             else:
                 print('Date aelter als drei Tage!!!')
-            result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
+            result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close,'ChangeToday': daily}, ignore_index=True)
         print(result)
         return result.to_csv(index=False)
 
@@ -68,16 +73,13 @@ def stocks_taskflow_api_etl():
     @task()
     def email_callback(df):
         df = pd.read_csv(io.StringIO(df))  
-        files = [f for f in os.listdir('.') if os.path.isfile(f)]
-        files2 = glob.glob("figures/*.png")
-        
-        content = df.to_html() + str(files) + '<br><br>' + str(files2)
-   
+        files = glob.glob("figures/*.png")  
+        content = df.to_html() 
         send_email(
             to=["reto.schuermann@gmail.com"],
             subject='Report',
             html_content=content,
-            files=['airflow.cfg']
+            files=files
         )
     dataTest = extract()
     dataTest2 = transform(dataTest) 

@@ -29,8 +29,8 @@ def stocks_taskflow_api_etl():
             df['Close: 30 Day Mean'] = df['Close'].rolling(window=20).mean()
             df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
             df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
- #           fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
- #           fig.savefig(stock + '.png')
+            fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
+            fig.savefig(stock + '.png')
             dfTail = df.tail(1)
             date = pd.to_datetime(dfTail.iloc[0].name)
             close = dfTail.iloc[0]['Close']
@@ -49,13 +49,13 @@ def stocks_taskflow_api_etl():
                 print('Date aelter als drei Tage!!!')
             result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
         print(result)
-        return result.to_csv()
+        return result.to_csv(index=False)
 
     @task()
     def transform(df):
         df = pd.read_csv(io.StringIO(df))     
         print(df)
-        return df.to_csv()
+        return df.to_csv(index=False)
 
     @task()
     def load(total_order_value: float):
@@ -69,7 +69,8 @@ def stocks_taskflow_api_etl():
         send_email(
         to=["reto.schuermann@gmail.com"],
         subject='subject',
-        html_content=content
+        html_content=content,
+        files=['AAPL.png']
         )
 
 #    send_email_notification = EmailOperator(

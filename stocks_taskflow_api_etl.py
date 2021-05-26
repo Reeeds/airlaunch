@@ -32,6 +32,8 @@ def stocks_taskflow_api_etl():
             df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
             df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
             fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
+            if not os.path.exists('figures'):
+                os.makedirs('figures')
             fig.savefig('figures/' + stock + '.png')
             dfTail = df.tail(1)
             date = pd.to_datetime(dfTail.iloc[0].name)

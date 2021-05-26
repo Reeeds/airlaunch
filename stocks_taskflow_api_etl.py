@@ -3,7 +3,7 @@ import json
 import pandas as pd
 from datetime import datetime, timedelta
 import pandas_datareader.data as web
-import pretty-html-table
+from pretty_html_table import build_table
 import io
 import os 
 import glob

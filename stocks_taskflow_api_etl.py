@@ -69,7 +69,7 @@ def stocks_taskflow_api_etl():
     def email_callback(df):
         df = pd.read_csv(io.StringIO(df))  
         files = [f for f in os.listdir('.') if os.path.isfile(f)]
-        files2 = glob.glob("/figures/*.png")
+        files2 = glob.glob("figures/*.png")
         
         content = df.to_html() + str(files) + '<br><br>' + str(files2)
    

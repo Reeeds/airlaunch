@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from datetime import datetime, timedelta
 import pandas_datareader.data as web
+import pretty-html-table
 import io
 import os 
 import glob
@@ -31,8 +32,8 @@ def stocks_taskflow_api_etl():
             dfClose = df['Close']
             today = dfClose.index[-1]
             yest= dfClose.index[-2]
-            close = dfClose[today]
-            daily =  (close - dfClose[yest]) / dfClose[yest] * 100
+            closeToday = dfClose[today]
+            daily =  round((closeToday - dfClose[yest]) / dfClose[yest] * 100,2)
             df['Close: 30 Day Mean'] = df['Close'].rolling(window=20).mean()
             df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
             df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
@@ -42,7 +43,7 @@ def stocks_taskflow_api_etl():
             fig.savefig('figures/' + stock + '.png')
             dfTail = df.tail(1)
             date = pd.to_datetime(dfTail.iloc[0].name)
-            close = dfTail.iloc[0]['Close']
+            close = round(dfTail.iloc[0]['Close'],2)
             upper = dfTail.iloc[0]['Upper']
             lower = dfTail.iloc[0]['Lower']
             diffrence = end - date
@@ -74,7 +75,7 @@ def stocks_taskflow_api_etl():
     def email_callback(df):
         df = pd.read_csv(io.StringIO(df))  
         files = glob.glob("figures/*.png")  
-        content = df.to_html() 
+        content = build_table(df.to_html() , 'blue_light')
         send_email(
             to=["reto.schuermann@gmail.com"],
             subject='Report',

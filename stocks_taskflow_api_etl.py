@@ -28,8 +28,8 @@ def stocks_taskflow_api_etl():
             df['Close: 30 Day Mean'] = df['Close'].rolling(window=20).mean()
             df['Upper'] = df['Close: 30 Day Mean'] + 2*df['Close'].rolling(window=20).std()
             df['Lower'] = df['Close: 30 Day Mean'] - 2*df['Close'].rolling(window=20).std()
-            fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
-            fig.savefig(stock + '.png')
+ #           fig = df[['Close','Close: 30 Day Mean','Upper','Lower']].plot(figsize=(16,6),title=stock).get_figure()
+ #           fig.savefig(stock + '.png')
             dfTail = df.tail(1)
             date = pd.to_datetime(dfTail.iloc[0].name)
             close = dfTail.iloc[0]['Close']
@@ -67,8 +67,7 @@ def stocks_taskflow_api_etl():
 #        files=['stocks.csv']
     )
 
-    order_data = extract()
-    send_email_notification
+    order_data = extract() >> send_email_notification
    # order_summary = transform(order_data)
    # load(order_summary["total_order_value"])
 

@@ -46,6 +46,7 @@ def stocks_taskflow_api_etl():
             else:
                 print('Date aelter als drei Tage!!!')
             result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
+            print(result)
         return pd.DataFrame(result)
 
     @task(multiple_outputs=True)
@@ -58,8 +59,8 @@ def stocks_taskflow_api_etl():
             print("Total order value is: %.2f" % total_order_value)
 
     order_data = extract()
-    order_summary = transform(order_data)
-    load(order_summary["total_order_value"])
+   # order_summary = transform(order_data)
+   # load(order_summary["total_order_value"])
 
 stocks_etl_dag = stocks_taskflow_api_etl()
 

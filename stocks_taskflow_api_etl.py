@@ -48,7 +48,7 @@ def stocks_taskflow_api_etl():
                 print('Date aelter als drei Tage!!!')
             result = result.append({'Date' : date , 'Stock' : stock, 'Action': action,'Close':close}, ignore_index=True)
         print(result)
-        return pd.DataFrame(result)
+        return 'test'
 
     @task(multiple_outputs=True)
     def transform(df):

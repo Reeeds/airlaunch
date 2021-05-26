@@ -3,9 +3,10 @@ import json
 import pandas as pd
 from datetime import datetime, timedelta
 import pandas_datareader.data as web
+import io
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
-from airflow.operators.email import EmailOperator
+from airflow.utils.email import send_email
 
 default_args = {
     'owner': 'airflow',
@@ -52,23 +53,36 @@ def stocks_taskflow_api_etl():
 
     @task(multiple_outputs=True)
     def transform(df):
+        df = pd.read_csv(io.StringIO(df))     
         print(df)
-        return {"total_order_value": 'total_order_value'}
+        return df.to_csv()
 
     @task()
     def load(total_order_value: float):
             print("Total order value is: %.2f" % total_order_value)
 
-    send_email_notification = EmailOperator(
-        task_id="send_email_notification",
-        to="reto.schuermann@gmail.com",
-        subject="Hoi",
-        html_content= "<h3>hoi</h3><br>",
-#        files=['stocks.csv']
-    )
+    @task()
+    def email_callback(df):
+        df = pd.read_csv(io.StringIO(df))  
+        content = df.to_html()
+    
+        send_email(
+        to=["reto.schuermann@gmail.com"],
+        subject='subject',
+        html_content=content
+        )
 
-    order_data = extract() >> send_email_notification
-   # order_summary = transform(order_data)
+#    send_email_notification = EmailOperator(
+#        task_id="send_email_notification",
+#        to="reto.schuermann@gmail.com",
+#        subject="Hoi",
+#        html_content= "<h3>hoi</h3><br>",
+#        files=['stocks.csv']
+#    )
+
+    order_data = extract()
+    order_summary = transform(order_data) 
+    email_callback()
    # load(order_summary["total_order_value"])
 
 stocks_etl_dag = stocks_taskflow_api_etl()

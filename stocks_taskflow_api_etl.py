@@ -13,6 +13,11 @@ from airflow.utils.email import send_email
 
 default_args = {
     'owner': 'airflow',
+    "email_on_failure": True,
+    "email_on_retry": False,
+    "email": "reto.schuermann@gmail.com",
+    "retries": 1,
+    "retry_delay": timedelta(minutes=5)
 }
 
 @dag(default_args=default_args, schedule_interval=None, start_date=days_ago(2), tags=['example'])
@@ -75,7 +80,7 @@ def stocks_taskflow_api_etl():
     def email_callback(df):
         df = pd.read_csv(io.StringIO(df))  
         files = glob.glob("figures/*.png")  
-        content = build_table(df.to_html() , 'blue_light')
+        content = build_table(df , 'blue_light')
         send_email(
             to=["reto.schuermann@gmail.com"],
             subject='Report',

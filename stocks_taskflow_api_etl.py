@@ -10,6 +10,8 @@ import glob
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.utils.email import send_email
+import yfinance as yfin
+yfin.pdr_override()
 
 default_args = {
     'owner': 'airflow',
@@ -31,7 +33,8 @@ def stocks_taskflow_api_etl():
         end = datetime.now()
         start = datetime(end.year - 1,end.month,end.day)#
         for stock in stock_list:   
-            globals()[stock] = web.DataReader(stock,'yahoo',start,end)
+            globals()[stock] = web.get_data_yahoo(stock, start=start, end=end)
+   #         globals()[stock] = web.DataReader(stock,'yahoo',start,end)
         for stock in stock_list:
             df = globals()[stock]
             dfClose = df['Close']

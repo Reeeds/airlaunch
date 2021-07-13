@@ -19,6 +19,7 @@ default_args = {
     "email_on_retry": False,
     "email": "reto.schuermann@gmail.com",
     "retries": 1,
+    "execution_timeout": timedelta(minutes=5),
     "retry_delay": timedelta(minutes=5)
 }
 

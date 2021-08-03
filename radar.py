@@ -51,12 +51,14 @@ def radar():
         
         if not os.path.exists('pdfs'):
             os.makedirs('pdfs')
-        urllib.request.urlretrieve(link1, "/pdfs/kw" + str(kw1) + ".pdf")
-        urllib.request.urlretrieve(link2, "/pdfs/kw" + str(kw2) + ".pdf")
+        os.mknod("pdfs/newfile.txt")
+        urllib.request.urlretrieve(link1, "kw" + str(kw1) + ".pdf")
+        urllib.request.urlretrieve(link2, "kw" + str(kw2) + ".pdf")
 
     @task()
     def sendEmail():
-        files = glob.glob("pdfs/*.pdf")  
+        files = glob.glob("*kw*.pdf")  
+        print(files)
         content = '<h1>Hoi</h1>'
         send_email(
             to=["reto.schuermann@gmail.com"],
@@ -64,8 +66,7 @@ def radar():
             html_content=content,
             files=files
         )
-    getPdf()
-    sendEmail()
+    getPdf() >  sendEmail()
 
 radar = radar()
 

@@ -50,8 +50,7 @@ def radar():
         print(link2)
         
         if not os.path.exists('pdfs'):
-            os.makedirs('pdfs')
-        os.mknod("pdfs/newfile.txt")
+            os.makedirs('pdfs') 
         urllib.request.urlretrieve(link1, "pdfs/kw" + str(kw1) + ".pdf")
         urllib.request.urlretrieve(link2, "pdfs/kw" + str(kw2) + ".pdf")
 

@@ -66,7 +66,7 @@ def radar():
             html_content=content,
             files=files
         )
-    getPdf() >  sendEmail()
+    getPdf >  sendEmail
 
 radar = radar()
 

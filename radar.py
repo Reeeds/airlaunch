@@ -35,19 +35,13 @@ def radar():
         elementsTitle = document.xpath("//a[contains(@target, '_blank')]/text()")
         title1 = elementsTitle[1].get()
         title2 = elementsTitle[2].get()
-        print(title1)
-        print(title2)
         kw1 = [int(s) for s in title1.split() if s.isdigit()][0]
         kw2 = [int(s) for s in title2.split() if s.isdigit()][0]
-        print(kw1)
-        print(kw2)
 
         elements = document.xpath("//a[contains(@target, '_blank')]")
 
         link1 = baseURL + elements[1].attrib['href']
         link2 = baseURL +elements[2].attrib['href']
-        print(link1)
-        print(link2)
         
         if not os.path.exists('pdfs'):
             os.makedirs('pdfs') 
@@ -57,8 +51,7 @@ def radar():
     @task()
     def sendEmail():
         files = glob.glob("*kw*.pdf")  
-        print(files)
-        content = '<h1>Hoi</h1>'
+        content = '<h1>Radar</h1>'
         send_email(
             to=["reto.schuermann@gmail.com"],
             subject='Radar',

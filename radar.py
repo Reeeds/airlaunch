@@ -24,7 +24,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5)
 }
 
-@dag(default_args=default_args, schedule_interval="0 16 * * *", start_date=days_ago(2), tags=['example'])
+@dag(default_args=default_args, schedule_interval="0 20 * * SUN", start_date=days_ago(2), tags=['example'])
 def radar():
 
     @task()

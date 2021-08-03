@@ -26,8 +26,8 @@ default_args = {
     "retry_delay": timedelta(minutes=5)
 }
 
-receiverList = Variable.get("radarReceiverList", deserialize_json=True)
-receivers = receiverList['receivers']
+receivers = Variable.get("radarReceiver")
+receiversList = receivers.split(',')
 
 @dag(default_args=default_args, schedule_interval="0 20 * * SUN", start_date=days_ago(2), tags=['example'])
 def radar():
@@ -58,7 +58,7 @@ def radar():
         files = glob.glob("*kw*.pdf")  
         content = '<h1>Radar</h1>'
         send_email(
-            to=receivers,
+            to=receiversList,
             subject='Radar',
             html_content=content,
             files=files

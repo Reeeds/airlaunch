@@ -58,6 +58,7 @@ def radar():
         files = glob.glob("*kw*.pdf")  
         content = '<h1>Radar</h1>'
         send_email(
+            to=None,
             bcc=receiversList,
             subject='Radar',
             html_content=content,

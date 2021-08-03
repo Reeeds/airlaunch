@@ -13,6 +13,8 @@ import glob
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.utils.email import send_email
+from airflow.models import Variable
+
 
 default_args = {
     'owner': 'airflow',
@@ -23,6 +25,8 @@ default_args = {
     "execution_timeout": timedelta(minutes=5),
     "retry_delay": timedelta(minutes=5)
 }
+
+receiverList = Variable.get("radarReceiverList")
 
 @dag(default_args=default_args, schedule_interval="0 20 * * SUN", start_date=days_ago(2), tags=['example'])
 def radar():
@@ -53,7 +57,7 @@ def radar():
         files = glob.glob("*kw*.pdf")  
         content = '<h1>Radar</h1>'
         send_email(
-            to=["reto.schuermann@gmail.com"],
+            to=receiverList,
             subject='Radar',
             html_content=content,
             files=files

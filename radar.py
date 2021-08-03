@@ -8,7 +8,7 @@ kw = datetime.now().isocalendar()[1]
 
 
 #import io
-#import os 
+import os 
 import glob
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
@@ -48,7 +48,9 @@ def radar():
         link2 = baseURL +elements[2].attrib['href']
         print(link1)
         print(link2)
-
+        
+        if not os.path.exists('pdfs'):
+            os.makedirs('pdfs')
         urllib.request.urlretrieve(link1, "pdfs/kw" + str(kw1) + ".pdf")
         urllib.request.urlretrieve(link2, "pdfs/kw" + str(kw2) + ".pdf")
 

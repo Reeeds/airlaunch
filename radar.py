@@ -59,7 +59,9 @@ def radar():
 
         urllib.request.urlretrieve(link1, "test/kw_" + str(kw1) + ".pdf")
         urllib.request.urlretrieve(link2, "test/kw_" + str(kw2) + ".pdf")
-
+        files1 = glob.glob("test/*.pdf")  
+        print(files1)
+        
     @task()
     def sendEmail():
         files = glob.glob("test/*.pdf")  

@@ -60,7 +60,7 @@ def radar():
 
     @task()
     def sendEmail():
-        files = glob.glob("*.pdf")  
+        files = glob.glob("pdfs/*.pdf")  
         print(files)
         content = '<h1>Radar</h1><br>' + str(kw) + '<br>' + str(files)
         send_email(

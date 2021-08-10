@@ -24,7 +24,7 @@ default_args = {
 
 baseURL = 'https://polizei.lu.ch'
 kw = datetime.now().isocalendar()[1]
-
+print(kw)
 receivers = Variable.get("radarReceiver")
 receiversList = receivers.split(',')
 
@@ -42,6 +42,9 @@ def radar():
         kw1 = [int(s) for s in title1.split() if s.isdigit()][0]
         kw2 = [int(s) for s in title2.split() if s.isdigit()][0]
 
+        print(kw1)
+        print(kw2)
+
         elements = document.xpath("//a[contains(@target, '_blank')]")
 
         link1 = baseURL + elements[1].attrib['href']
@@ -56,7 +59,7 @@ def radar():
     def sendEmail():
         files = glob.glob("*kw*.pdf")  
         print(files)
-        content = '<h1>Radar</h1><br>' + kw + '<br>' + files
+        content = '<h1>Radar</h1><br>' + str(kw) + '<br>' + str(files)
         send_email(
             to=receiversList[0],
             bcc=receiversList[1:],

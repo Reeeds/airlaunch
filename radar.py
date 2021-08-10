@@ -3,11 +3,7 @@ import requests
 from datetime import datetime, timedelta
 import urllib.request
 from scrapy.selector import Selector
-baseURL = 'https://polizei.lu.ch'
-kw = datetime.now().isocalendar()[1]
 
-
-#import io
 import os 
 import glob
 from airflow.decorators import dag, task
@@ -26,10 +22,13 @@ default_args = {
     "retry_delay": timedelta(minutes=5)
 }
 
+baseURL = 'https://polizei.lu.ch'
+kw = datetime.now().isocalendar()[1]
+
 receivers = Variable.get("radarReceiver")
 receiversList = receivers.split(',')
 
-@dag(default_args=default_args, schedule_interval="0 20 * * SUN", start_date=days_ago(2), tags=['example'])
+@dag(default_args=default_args, schedule_interval="0 2 * * *", start_date=days_ago(2), tags=['example'])
 def radar():
 
     @task()
@@ -56,7 +55,8 @@ def radar():
     @task()
     def sendEmail():
         files = glob.glob("*kw*.pdf")  
-        content = '<h1>Radar</h1>'
+        print(files)
+        content = '<h1>Radar</h1><br>' + kw + '<br>' + files
         send_email(
             to=receiversList[0],
             bcc=receiversList[1:],

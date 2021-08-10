@@ -48,8 +48,11 @@ def radar():
         elements = document.xpath("//a[contains(@target, '_blank')]")
 
         link1 = baseURL + elements[1].attrib['href']
-        link2 = baseURL +elements[2].attrib['href']
+        link2 = baseURL + elements[2].attrib['href']
         
+        print(link1)
+        print(link2)
+
         if not os.path.exists('pdfs' ):
             os.makedirs('pdfs') 
         urllib.request.urlretrieve(link1, "pdfs/kw_" + str(kw1) + ".pdf")
@@ -57,7 +60,7 @@ def radar():
 
     @task()
     def sendEmail():
-        files = glob.glob("*kw_*.pdf")  
+        files = glob.glob("*.pdf")  
         print(files)
         content = '<h1>Radar</h1><br>' + str(kw) + '<br>' + str(files)
         send_email(

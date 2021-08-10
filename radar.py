@@ -50,20 +50,20 @@ def radar():
         link1 = baseURL + elements[1].attrib['href']
         link2 = baseURL +elements[2].attrib['href']
         
-        if not os.path.exists('pdfs'):
+        if not os.path.exists('pdfs' ):
             os.makedirs('pdfs') 
-        urllib.request.urlretrieve(link1, "pdfs/kw" + str(kw1) + ".pdf")
-        urllib.request.urlretrieve(link2, "pdfs/kw" + str(kw2) + ".pdf")
+        urllib.request.urlretrieve(link1, "pdfs/kw_" + str(kw1) + ".pdf")
+        urllib.request.urlretrieve(link2, "pdfs/kw_" + str(kw2) + ".pdf")
 
     @task()
     def sendEmail():
-        files = glob.glob("*kw*.pdf")  
+        files = glob.glob("*kw_*.pdf")  
         print(files)
         content = '<h1>Radar</h1><br>' + str(kw) + '<br>' + str(files)
         send_email(
             to=receiversList[0],
             bcc=receiversList[1:],
-            subject='Radar',
+            subject='Radar ' +kw,
             html_content=content,
             files=files
         )

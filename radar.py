@@ -66,7 +66,7 @@ def radar():
         send_email(
             to=receiversList[0],
             bcc=receiversList[1:],
-            subject='Radar ' +kw,
+            subject='Radar Test ' + str(kw),
             html_content=content,
             files=files
         )

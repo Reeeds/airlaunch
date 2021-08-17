@@ -10,8 +10,6 @@ import glob
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.utils.email import send_email
-#import yfinance as yfin
-#yfin.pdr_override()
 
 default_args = {
     'owner': 'airflow',
@@ -29,7 +27,7 @@ def stocks_taskflow_api_etl():
     @task()
     def extract():
        
-        stock_list = ['AAPL','GOOGL','AMZN','TSLA','FB','ROG.SW','NOVN.SW','IDIA.SW','CSGN.SW','UBSG.SW','RLF.SW','SEDG','MDB','ALGN','ALXN','SIVB','MBTN.SW','PGHN.SW','NESN.SW','ABBV','AYX','ADS']
+        stock_list = ['AAPL','GOOGL','AMZN','TSLA','FB','ROG.SW','NOVN.SW','IDIA.SW','CSGN.SW','UBSG.SW','RLF.SW','SEDG','MDB','ALGN','SIVB','MBTN.SW','PGHN.SW','NESN.SW','ABBV','AYX','ADS','ADBE','AZN','TEAM','AMRS']
         result = pd.DataFrame(columns=('Date', 'Stock', 'Action'))
         end = datetime.now()
         start = datetime(end.year - 1,end.month,end.day)#

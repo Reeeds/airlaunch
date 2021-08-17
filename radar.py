@@ -28,7 +28,7 @@ print(kw)
 receivers = Variable.get("radarReceiver")
 receiversList = receivers.split(',')
 
-@dag(default_args=default_args, schedule_interval="0 12 * * SUN", start_date=days_ago(2), tags=['example'])
+@dag(default_args=default_args, schedule_interval="0 12 * * 2,3,4", start_date=days_ago(2), tags=['example'])
 def radar():
 
     @task()

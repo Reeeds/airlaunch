@@ -72,7 +72,7 @@ def stocks_taskflow_api_etl():
     def transform(df):
         df = pd.read_csv(io.StringIO(df))  
         df = df.sort_values(by=['ChangeToday'], ascending=False)   
-        print(df)
+#        print(df)
         return df.to_csv(index=False)
 
     @task()

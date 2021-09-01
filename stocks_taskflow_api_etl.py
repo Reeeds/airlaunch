@@ -27,7 +27,7 @@ def stocks_taskflow_api_etl():
     @task()
     def extract():
        
-        stock_list = ['AAPL','GOOGL','AMZN','TSLA','FB','ROG.SW','NOVN.SW','IDIA.SW','CSGN.SW','UBSG.SW','RLF.SW','SEDG','MDB','ALGN','SIVB','MBTN.SW','PGHN.SW','NESN.SW','ABBV','AYX','ADS','ADBE','AZN','TEAM','AMRS']
+        stock_list = ['AAPL','GOOGL','AMZN','TSLA','FB','ROG.SW','NOVN.SW','IDIA.SW','CSGN.SW','UBSG.SW','RLF.SW','SEDG','MDB','ALGN','SIVB','MBTN.SW','PGHN.SW','NESN.SW','ABBV','AYX','ADS','ADBE','AZN','TEAM','AMRS','ZURN.SW']
         result = pd.DataFrame(columns=('Date', 'Stock', 'Action'))
         end = datetime.now()
         start = datetime(end.year - 1,end.month,end.day)#
@@ -70,7 +70,8 @@ def stocks_taskflow_api_etl():
 
     @task()
     def transform(df):
-        df = pd.read_csv(io.StringIO(df))     
+        df = pd.read_csv(io.StringIO(df))  
+        df = df.sort_values(by=['ChangeToday'], ascending=False)   
         print(df)
         return df.to_csv(index=False)
 

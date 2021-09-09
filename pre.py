@@ -25,7 +25,7 @@ def pre():
 
     @task()
     def extractData():
-        dfDataSalDocs = pd.read('dfDataSalDocsTest.csv')
+        dfDataSalDocs = pd.read_csv('dfDataSalDocsTest.csv')
         dfDataSalDocs = dfDataSalDocs.groupby('SalDoc_InternalNo')['SalDocItem_ArtInternalNo']
         dataSalDocsList = []
         for name, items in dfDataSalDocs:

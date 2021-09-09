@@ -71,7 +71,7 @@ def pre():
 
     @task()
     def transform2(data):
-        aResult = pd.read_csv(data)
+        aResult = pd.read_csv(io.StringIO(data))
         allArtDistinct = aResult.antecedents.unique()
         dfResult = pd.DataFrame()
         for artNo in  allArtDistinct:

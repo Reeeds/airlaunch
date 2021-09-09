@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 #import os 
 #import glob
+import io
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import association_rules, apriori
 from airflow.decorators import dag, task
@@ -84,7 +85,7 @@ def pre():
         # Neue Spalte mit BoId von ConnectedArt zusammenbauen
         dfResult['ConnectedArt_BoId'] = dfResult['consequents'] + "," +   str(cnf["settings"]["pre"]["artTypeConnectedNo"])      + "," + dfResult['antecedents']
         print(dfResult.head())
-        return dfResult
+        return dfResult.to_csv()
 
 
     data = extractData()

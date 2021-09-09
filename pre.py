@@ -66,10 +66,11 @@ def pre():
         aResult["antecedents"] = rules["antecedents"].apply(lambda x: ', '.join(list(x))).astype("unicode")
         aResult["consequents"] = rules["consequents"].apply(lambda x: ', '.join(list(x))).astype("unicode")
         df = aResult
-        return df
+        return df.to_csv()
 
     @task()
     def transform2(data):
+        aResult = pd.read_csv(data)
         allArtDistinct = aResult.antecedents.unique()
         dfResult = pd.DataFrame()
         for artNo in  allArtDistinct:

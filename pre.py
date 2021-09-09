@@ -1,5 +1,6 @@
 
 from datetime import datetime, timedelta
+import pandas as pd
 #import os 
 #import glob
 from airflow.decorators import dag, task

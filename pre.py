@@ -11,10 +11,10 @@ from airflow.models import Variable
 
 default_args = {
     'owner': 'airflow',
-    "email_on_failure": True,
+    "email_on_failure": False,
     "email_on_retry": False,
     "email": "reto.schuermann@gmail.com",
-    "retries": 1,
+    "retries": 0,
     "execution_timeout": timedelta(minutes=5),
     "retry_delay": timedelta(minutes=5)
 }
@@ -25,7 +25,9 @@ def pre():
 
     @task()
     def extractData():
-        dfDataSalDocs = pd.read_csv('dfDataSalDocsTest.csv')
+
+        dfDataSalDocsTest = Variable.get("dfDataSalDocsTestJSON", deserialize_json=True)
+        dfDataSalDocs = pd.read_json(dfDataSalDocsTest)
         dfDataSalDocs = dfDataSalDocs.groupby('SalDoc_InternalNo')['SalDocItem_ArtInternalNo']
         dataSalDocsList = []
         for name, items in dfDataSalDocs:

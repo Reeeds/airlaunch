@@ -49,7 +49,7 @@ def pre():
     @task()
     def transform(data:list):
         te = TransactionEncoder()
-        te_ary = te.fit_transform(dataSalDocsList, sparse=True)
+        te_ary = te.fit_transform(data, sparse=True)
         sparse_df = pd.DataFrame.sparse.from_spmatrix(te_ary, columns=te.columns_)
         print('Python Script: SparseMatrix calculated')
 

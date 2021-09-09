@@ -75,7 +75,7 @@ def pre():
         allArtDistinct = aResult.antecedents.unique()
         dfResult = pd.DataFrame()
         for artNo in  allArtDistinct:
-            dfart = df.loc[df['antecedents'] == artNo].head(numberOfRecommendationsPerArt)
+            dfart = aResult.loc[aResult['antecedents'] == artNo].head(numberOfRecommendationsPerArt)
             val = (dfart.reset_index().index * 10) +10
             dfart = dfart.assign(rang = val)
             dfResult = dfResult.append(dfart)

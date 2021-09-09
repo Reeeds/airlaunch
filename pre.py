@@ -27,7 +27,10 @@ def pre():
     def extractData():
 
         dfDataSalDocsTest = Variable.get("dfDataSalDocsTestJSON", deserialize_json=True)
-        dfDataSalDocs = pd.read_json(dfDataSalDocsTest)
+        print(type(dfDataSalDocsTest))
+        print(dfDataSalDocsTest)
+#        dfDataSalDocs = pd.read_json(dfDataSalDocsTest)
+        dfDataSalDocs = pd.DataFrame(dfDataSalDocsTest)
         dfDataSalDocs = dfDataSalDocs.groupby('SalDoc_InternalNo')['SalDocItem_ArtInternalNo']
         dataSalDocsList = []
         for name, items in dfDataSalDocs:

@@ -23,6 +23,7 @@ default_args = {
 
 
 minSupport = float(Variable.get("minSupport"))
+numberOfRecommendationsPerArt = int(Variable.get("numberOfRecommendationsPerArt"))
 
 
 @dag(default_args=default_args, schedule_interval="* * * * *", start_date=days_ago(2), tags=['example'])
@@ -47,7 +48,7 @@ def pre():
         return dataSalDocsList
 
     @task()
-    def transform(data:list):
+    def transform1(data:list):
         te = TransactionEncoder()
         te_ary = te.fit_transform(data, sparse=True)
         sparse_df = pd.DataFrame.sparse.from_spmatrix(te_ary, columns=te.columns_)
@@ -65,14 +66,29 @@ def pre():
         aResult["antecedents"] = rules["antecedents"].apply(lambda x: ', '.join(list(x))).astype("unicode")
         aResult["consequents"] = rules["consequents"].apply(lambda x: ', '.join(list(x))).astype("unicode")
         df = aResult
-        print(df.head())
+        return df
 
+    @task()
+    def transform2(data):
+        allArtDistinct = aResult.antecedents.unique()
+        dfResult = pd.DataFrame()
+        for artNo in  allArtDistinct:
+            dfart = df.loc[df['antecedents'] == artNo].head(numberOfRecommendationsPerArt)
+            val = (dfart.reset_index().index * 10) +10
+            dfart = dfart.assign(rang = val)
+            dfResult = dfResult.append(dfart)
 
-
+        # Reihenfolge der Spalten ändern
+        dfResult = dfResult[['antecedents', 'consequents','rang','antecedent support','consequent support','support','confidence','lift','leverage','conviction']]
+        # Neue Spalte mit BoId von ConnectedArt zusammenbauen
+        dfResult['ConnectedArt_BoId'] = dfResult['consequents'] + "," +   str(cnf["settings"]["pre"]["artTypeConnectedNo"])      + "," + dfResult['antecedents']
+        print(dfResult.head())
+        return dfResult
 
 
     data = extractData()
-    transform(data)
+    transformedData = transform1(data)
+    transform2(transformedData)
 
 pre = pre()
 

@@ -33,7 +33,8 @@ def pre():
             for item in basketItems:
                 itemsList.append(str(item))
             dataSalDocsList.append(itemsList)
-    print(dataSalDocsList[:10])
+        
+        print(dataSalDocsList[:10])
 
 #    @task()
 #    def sendEmail():

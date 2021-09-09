@@ -22,7 +22,7 @@ default_args = {
 }
 
 
-minSupport = Variable.get("minSupport")
+minSupport = float(Variable.get("minSupport"))
 
 
 @dag(default_args=default_args, schedule_interval="* * * * *", start_date=days_ago(2), tags=['example'])

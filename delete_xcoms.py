@@ -38,5 +38,5 @@ def delete_xcoms():
 
     loadData()
 
-pre = pre()
+delete_xcoms = delete_xcoms()
 

@@ -11,6 +11,10 @@ from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.utils.email import send_email
 
+from airflow.utils.db import provide_session
+from airflow.models import XCom
+from sqlalchemy import func
+
 default_args = {
     'owner': 'airflow',
     "email_on_failure": True,
@@ -21,7 +25,13 @@ default_args = {
     "retry_delay": timedelta(minutes=5)
 }
 
-@dag(default_args=default_args, schedule_interval="0 16 * * 1,2,3,4,5", start_date=days_ago(2), tags=['example'])
+@provide_session
+def cleanup_xcom(session=None):
+    print('hoi')
+    session.query(XCom).filter(XCom.execution_date <= func.date('2025-06-01')).delete(synchronize_session=False)
+
+
+@dag(default_args=default_args, schedule_interval="0 16 * * 1,2,3,4,5", start_date=days_ago(2),on_success_callback=cleanup_xcom())
 def stocks_taskflow_api_etl():
 
     @task()

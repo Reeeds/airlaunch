@@ -100,9 +100,17 @@ def stocks_taskflow_api_etl():
             html_content=content,
             files=files
         )
+
+
+
+    def text_cleanup_xcom(session=None):
+        print('hoi')
+        session.query(XCom).filter(XCom.execution_date <= func.date('2025-06-01')).delete(synchronize_session=False)
+
     dataTest = extract()
     dataTest2 = transform(dataTest) 
     email_callback(dataTest2)
+    text_cleanup_xcom()
    # load(order_summary["total_order_value"])
 
 stocks_etl_dag = stocks_taskflow_api_etl()

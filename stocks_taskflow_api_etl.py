@@ -28,10 +28,10 @@ default_args = {
 @provide_session
 def cleanup_xcom(session=None):
     print('hoi')
-    session.query(XCom).filter().delete(synchronize_session=False)
+    session.query(XCom).filter().delete()
 
 #
-@dag(default_args=default_args, schedule_interval="0 16 * * 1,2,3,4,5", start_date=days_ago(2),on_success_callback=cleanup_xcom())
+@dag(default_args=default_args, schedule_interval="0 16 * * 1,2,3,4,5", start_date=days_ago(2),on_success_callback=cleanup_xcom)
 def stocks_taskflow_api_etl():
 
     @task()

@@ -33,7 +33,7 @@ default_args = {
 @provide_session
 def cleanup_xcom(context, session=None):
     dag_id = context["dag"].dag_id
-    session.query(XCom).filter(XCom.dag_id == dag_id).delete()
+    session.query(XCom).filter(XCom.dag_id =='pre').delete()
 
 
 #

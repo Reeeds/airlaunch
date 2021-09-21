@@ -25,13 +25,13 @@ default_args = {
     "retry_delay": timedelta(minutes=5)
 }
 
-@provide_session
-def cleanup_xcom(session=None):
-    print('hoi')
-    session.query(XCom).filter(XCom.execution_date <= func.date('2025-06-01')).delete(synchronize_session=False)
+#@provide_session
+#def cleanup_xcom(session=None):
+#    print('hoi')
+#    session.query(XCom).filter(XCom.execution_date <= func.date('2025-06-01')).delete(synchronize_session=False)
 
-
-@dag(default_args=default_args, schedule_interval="0 16 * * 1,2,3,4,5", start_date=days_ago(2),on_success_callback=cleanup_xcom())
+#,on_success_callback=cleanup_xcom()
+@dag(default_args=default_args, schedule_interval="0 16 * * 1,2,3,4,5", start_date=days_ago(2))
 def stocks_taskflow_api_etl():
 
     @task()
